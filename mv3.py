@@ -132,7 +132,10 @@ def SimpsonIntegrtion(a: int, b: int, n: float, h: float, makeTable: bool = Fals
 
 def MakeTable(listOfTables: list) -> None:
     """Создает таблицу промежуточных вычислений и
-    печатает её
+    печатает её. Предполагается, что количество элементов в листах
+    равное
+    @param listOfTables: list - Лист из листов с промежуточными
+    вычислениями.
     """
     if listOfTables == []:
         return None
