@@ -11,8 +11,7 @@ def Precision() -> float:
 
 def f(x: float) -> float:
     """Возвращает функцию для интегрирования"""
-    #return math.exp(x) + (1 / x)
-    return math.pow(4,x)
+    return math.exp(x) + (1 / x)
 
 def GetInitialNodes(a: int, b :int, simpson :bool = False) -> float:
     """
