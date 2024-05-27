@@ -3,7 +3,7 @@ import math
 
 def TrueValue() -> float:
     """Заранее известное истинное значение интеграла"""
-    return ( math.e * (math.e - 1) ) + math.log(2)
+    return (( math.e * (math.e - 1) ) + math.log(2))
 
 def Precision() -> float:
     """Точность для оценки погрешности"""
@@ -11,7 +11,7 @@ def Precision() -> float:
 
 def f(x: float) -> float:
     """Возвращает функцию для интегрирования"""
-    return math.exp(x) + (1 / x)
+    return (math.exp(x)) + (1 / x)
 
 def GetInitialNodes(a: int, b :int, simpson :bool = False) -> float:
     """
@@ -147,8 +147,35 @@ def MakeTable(listOfTables: list) -> None:
         print(buf)
     return None
 
-a = 0
-b = 1
-n = GetInitialNodes(a,b, True)
-h = GetStep(a,b,n)
-SimpsonIntegrtion(a,b,n,h,True)
+def CalculateFunc(a: int,b: int,function, x: int, y: bool = False) -> None:
+    n = GetInitialNodes(a, b, y)
+    h = GetStep(a, b, n)
+    n2 = 2 * n
+    h2 = GetStep(a, b, n2)
+    e = np.abs(function(a, b, n, h, True) - function(a, b, n2, h2)) / x
+    d = np.abs(function(a, b, n, h) - TrueValue())
+    while e >= Precision():
+        n = n2
+        h = h2
+        print(h)
+        n2 = 2 * n
+        h2 = h / 2
+        e = np.abs(function(a, b, n, h, True) - function(a, b, n2, h2)) / x
+        d = np.abs(function(a, b, n, h) - TrueValue)
+    print("Точность достигнута: {}, Количество узлов: {}".format(d, n))
+    print("\n")
+
+def main():
+    a = 1
+    b = 2
+    
+    print("Вычисление по методу прямоугольников")
+    CalculateFunc(a,b,RectanglesIntegration, 3)
+    print("Вычисление по методу трапеций")
+    CalculateFunc(a,b, TrapezoidIntegration, 3)
+    print("Вычисление по методу Симпсона")
+    CalculateFunc(a,b, SimpsonIntegrtion, 15, True)
+
+if __name__ == '__main__':
+    main()
+
