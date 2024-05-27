@@ -31,35 +31,76 @@ def GetStep(a: int, b: int, n: float) -> float:
     """
     return (b - a) / n
 
-def RectanglesIntegration(a: int, b: int, n: float, h: float, h2: bool) -> float:
+def RectanglesIntegration(a: int, b: int, n: float, h: float, makeTable: bool = False) -> float:
     """
     Функция интегрирования методом треугольников
-    @param a: int;
-    @param b: int;
-    @param n: float;
-    @param h: float;
-    @param h2: bool;
+    @param a: int - нижний предел
+    @param b: int - верхний предел
+    @param n: float - число узлов разбиения
+    @param h: float - шаг разбиения
+    @param makeTable: bool - Создание таблицы для вывода на экран
+    """
+    result = 0
+    x = list()
+    c = list()
+    fc = list()
+    x.append(a)
+    for i in range(1, n+1):
+        x.append(x[i-1] + h)
+        c.append((x[i] + x[i-1]) / 2)
+        fc.append(f(c[i-1]))
+        result += f(c[i-1])
+    if makeTable: #Флаг для создания таблицы вычислений
+        tables = list()
+        tables.append(x)
+        tables.append(c)
+        tables.append(fc)
+        MakeTable(tables)
+    return result * ((b-a)/n)
+
+def TrapezoidIntegration(a: int, b: int, n: float, h: float, makeTable: bool) -> float:
+    """
+    Функция интегрирования методом треугольников
+    @param a: int - нижний предел
+    @param b: int - верхний предел
+    @param n: float - число узлов разбиения
+    @param h: float - шаг разбиения
+    @param makeTable: bool - Создание таблицы для вывода на экран
+    """
+    result = 0
+    xi = list()
+    yi = list()
+    x = a
+    y0 = f(x)
+
+    for i in range (0, n - 1):
+        x += h
+        xi.append(x)
+        result += f(x)
+        yi.append(result)
+    x+=h
+    xi.append(x)
+    yi.append(f(x))
+    result += ((y0 + f(x)) / 2)
+    
+    if makeTable: #Флаг для создания таблицы вычислений
+        tables = list()
+        tables.append(xi)
+        tables.append(yi)
+        MakeTable(tables)
+
+    return ((b-a) / n) * result
+
+def SimpsonIntegrtion(a: int, b: int, n: float, h: float, makeTable: bool) -> float:
+    """
+   Функция интегрирования методом треугольников
+    @param a: int - нижний предел
+    @param b: int - верхний предел
+    @param n: float - число узлов разбиения
+    @param h: float - шаг разбиения
+    @param makeTable: bool - Создание таблицы для вывода на экран
     """
     return 0.0
 
-def TrapezoidIntegration(a: int, b: int, n: float, h: float, h2: bool) -> float:
-    """
-    Функция интегрирования методом треугольников
-    @param a: int;
-    @param b: int;
-    @param n: float;
-    @param h: float;
-    @param h2: bool;
-    """
-    return 0.0
-
-def SimpsonIntegrtion(a: int, b: int, n: float, h: float, h2: bool) -> float:
-    """
-    Функция интегрирования методом треугольников
-    @param a: int;
-    @param b: int;
-    @param n: float;
-    @param h: float;
-    @param h2: bool;
-    """
-    return 0.0
+def MakeTable(listOfTables: list) -> None:
+    return None
