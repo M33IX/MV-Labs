@@ -11,7 +11,8 @@ def Precision() -> float:
 
 def f(x: float) -> float:
     """Возвращает функцию для интегрирования"""
-    return math.exp(x) + (1 / x)
+    #return math.exp(x) + (1 / x)
+    return math.pow(4,x)
 
 def GetInitialNodes(a: int, b :int, simpson :bool = False) -> float:
     """
@@ -33,7 +34,7 @@ def GetStep(a: int, b: int, n: float) -> float:
 
 def RectanglesIntegration(a: int, b: int, n: float, h: float, makeTable: bool = False) -> float:
     """
-    Функция интегрирования методом треугольников
+    Функция интегрирования методом прямоугольников
     @param a: int - нижний предел
     @param b: int - верхний предел
     @param n: float - число узлов разбиения
@@ -41,26 +42,28 @@ def RectanglesIntegration(a: int, b: int, n: float, h: float, makeTable: bool = 
     @param makeTable: bool - Создание таблицы для вывода на экран
     """
     result = 0
-    x = list()
+    xi = [a]
     c = list()
     fc = list()
-    x.append(a)
-    for i in range(1, n+1):
-        x.append(x[i-1] + h)
-        c.append((x[i] + x[i-1]) / 2)
+
+    for i in range(1, int(n)+1):
+        xi.append(xi[i-1] + h)
+        c.append((xi[i] + xi[i-1]) / 2)
         fc.append(f(c[i-1]))
-        result += f(c[i-1])
+        result += fc[i-1]
+
     if makeTable: #Флаг для создания таблицы вычислений
         tables = list()
-        tables.append(x)
+        xi.pop(0)
+        tables.append(xi)
         tables.append(c)
         tables.append(fc)
         MakeTable(tables)
-    return result * ((b-a)/n)
+    return result * GetStep(a,b,n)
 
-def TrapezoidIntegration(a: int, b: int, n: float, h: float, makeTable: bool) -> float:
+def TrapezoidIntegration(a: int, b: int, n: float, h: float, makeTable: bool = False) -> float:
     """
-    Функция интегрирования методом треугольников
+    Функция интегрирования методом трапеций
     @param a: int - нижний предел
     @param b: int - верхний предел
     @param n: float - число узлов разбиения
@@ -68,39 +71,82 @@ def TrapezoidIntegration(a: int, b: int, n: float, h: float, makeTable: bool) ->
     @param makeTable: bool - Создание таблицы для вывода на экран
     """
     result = 0
-    xi = list()
+    xi = [a]
     yi = list()
-    x = a
-    y0 = f(x)
+    y0 = f(a)
 
-    for i in range (0, n - 1):
-        x += h
-        xi.append(x)
-        result += f(x)
-        yi.append(result)
-    x+=h
-    xi.append(x)
-    yi.append(f(x))
-    result += ((y0 + f(x)) / 2)
-    
+    for i in range (1, int(n) + 1):
+        xi.append(xi[i-1] + h)
+        yi.append(f(xi[i]))
+        result += yi[i - 1]
+    result -= yi[len(yi) - 1]
+
+    result += ((y0 + yi[len(yi) - 1]) / 2)
+
     if makeTable: #Флаг для создания таблицы вычислений
         tables = list()
+        xi.pop(0)
         tables.append(xi)
         tables.append(yi)
         MakeTable(tables)
 
-    return ((b-a) / n) * result
+    return result * GetStep(a,b,n)
 
-def SimpsonIntegrtion(a: int, b: int, n: float, h: float, makeTable: bool) -> float:
+def SimpsonIntegrtion(a: int, b: int, n: float, h: float, makeTable: bool = False) -> float:
     """
-   Функция интегрирования методом треугольников
+   Функция интегрирования методом симпсона
     @param a: int - нижний предел
     @param b: int - верхний предел
     @param n: float - число узлов разбиения
     @param h: float - шаг разбиения
     @param makeTable: bool - Создание таблицы для вывода на экран
     """
-    return 0.0
+    xi = [a]
+    yi = list()
+    y0 = f(a)
+    oddSum = 0
+    evenSum = 0
+
+    #Вычисление до 2n-1
+    for i in range (1, int(n)):
+        xi.append(xi[i-1] + h)
+        yi.append(f(xi[i]))
+        if i % 2 != 0:
+            oddSum+=yi[i-1]
+        else:
+            evenSum += yi[i-1]
+    #Вычисление 2n
+    xi.append(xi[len(xi) - 1] + h)
+    yi.append(f(xi[len(xi) - 1]))
+    
+    result = y0 + (4* oddSum) + (2 * evenSum) + yi[len(yi) - 1]
+
+    if makeTable: #Флаг для создания таблицы вычислений
+        tables = list()
+        xi.pop(0)
+        tables.append(xi)
+        tables.append(yi)
+        MakeTable(tables)
+
+    return result * (GetStep(a,b,n) / 3)
+
 
 def MakeTable(listOfTables: list) -> None:
+    """Создает таблицу промежуточных вычислений и
+    печатает её
+    """
+    if listOfTables == []:
+        return None
+    
+    for i in range(len(listOfTables[0])):
+        buf = f"{i+1}\t"
+        for j in range(len(listOfTables)):
+            buf +=f"{listOfTables[j][i]} "
+        print(buf)
     return None
+
+a = 0
+b = 1
+n = GetInitialNodes(a,b, True)
+h = GetStep(a,b,n)
+SimpsonIntegrtion(a,b,n,h,True)
