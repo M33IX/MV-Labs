@@ -9,20 +9,19 @@ def AnalyticSolution(x: float) -> float:
     уравнения"""
     return -(math.pow(x, 2)) - 2*x + 5*math.exp(x) - 2
 
-def TureValue(x: list[float], n: float)-> list[float]:
+def TrueValue(x: list[float], n: float)-> list[float]:
     """Возвращает точное значение в заданых точках x"""
-    y = list()
-    for i in range(1, n+1):
-        y.append(AnalyticSolution(x[i]))
-    return y
+    return [AnalyticSolution(x[i]) for i in range(1, int(n+1))]
 
 def CalculateIterations(method:function, x: list[float], y0: float, n: float, h: float) -> list[float]:
     y = [y0]
     deltayi = list()
+
     for i in range(0, int(n)):
         result = method(x[i], y[i], h)
         deltayi.append(result[0])
         y.append(result[1])
+
     deltayi.append(0)
     MakeTable()
     return y
@@ -49,7 +48,7 @@ def RungeKuttasMethod(x: float, y: float, h: float) -> tuple[float, float]:
     y += deltayi
     return (deltayi, y)
 
-def MakeTable() -> None:
+def MakeTable(columns: tuple[list[float]]) -> None:
     """Мне уже"""
     pass
 
