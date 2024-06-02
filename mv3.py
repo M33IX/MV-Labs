@@ -154,6 +154,7 @@ def CalculateFunc(a: int,b: int,function, x: int, y: bool = False) -> None:
     h2 = GetStep(a, b, n2)
     e = np.abs(function(a, b, n, h, True) - function(a, b, n2, h2)) / x
     d = np.abs(function(a, b, n, h) - TrueValue())
+    iterations = 1
     while e >= Precision():
         n = n2
         h = h2
@@ -162,7 +163,8 @@ def CalculateFunc(a: int,b: int,function, x: int, y: bool = False) -> None:
         h2 = h / 2
         e = np.abs(function(a, b, n, h, True) - function(a, b, n2, h2)) / x
         d = np.abs(function(a, b, n, h) - TrueValue)
-    print("Точность достигнута: {}, Количество узлов: {}".format(d, n))
+        iterations += 1
+    print("За {} итераций достигнута точность: {}, Количество узлов: {}".format(iterations,d, n))
     print("\n")
 
 def main():
