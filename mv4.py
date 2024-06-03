@@ -13,6 +13,17 @@ def TrueValue(x: list[float], n: float)-> list[float]:
     """Возвращает точное значение в заданых точках x"""
     return [AnalyticSolution(x[i]) for i in range(1, int(n+1))]
 
+def getStep(start_value: float, final_value: float, step: float) ->  float:
+    return (final_value - start_value) / step
+
+def xStep(init_val: float, step: float, overall_steps: float) -> list[float]:
+    value = init_val
+    result = list()
+    for _  in range(int(init_val), int(overall_steps + 1)):
+        result.append(value)
+        value += step
+    return result
+
 def CalculateIterations(method:function, x: list[float], y0: float, n: float, h: float) -> list[float]:
     y = [y0]
     deltayi = list()
@@ -52,6 +63,18 @@ def MakeTable(columns: tuple[list[float]]) -> None:
     """Мне уже"""
     pass
 
-def CalculateError() -> None:
+def CalculateError(MethodsResults: tuple[list[float]]) -> None:
     """Просто похуй"""
     pass
+
+def main():
+    a = 0
+    b = 0.5
+    h = 0.1
+    n = getStep(a, b, h)
+    y0 = 0
+    x = xStep(a, h, n)
+    pass
+
+if __name__ == '__main__':
+    main()
