@@ -57,9 +57,10 @@ def ModifiedEulersMethod(x: float, y: float, h: float) -> tuple[float, float]:
 def RungeKuttasMethod(x: float, y: float, h: float) -> tuple[float, float]:
     """Считает значение прироста и значение y на одной итерации по методу Рунге-Кутта"""
     k1 = h * f(x, y)
-    k2 = h * f(x + ( h / 2 ), y + (k1 / 2))
-    k3 = h * f(x + h, y + 2 * k2 - k1)
-    deltayi = (1 / 6) * (k1 + 4 * k2 + k3)
+    k2 = h * f(x + (h / 2), y + (k1 / 2))
+    k3 = h * f(x + (h / 2), y + (k2 / 2))
+    k4 = h * f(x + h, y + k3)
+    deltayi = (1 / 6) * (k1 + 2 * k2 + 2 * k3 + k4)
     y += deltayi
     return (deltayi, y)
 
