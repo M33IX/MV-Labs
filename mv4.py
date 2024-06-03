@@ -14,9 +14,11 @@ def TrueValue(x: list[float], n: float)-> list[float]:
     return [AnalyticSolution(x[i]) for i in range(0, int(n+1))]
 
 def getStep(start_value: float, final_value: float, step: float) ->  float:
+    """Рассчитывает количество шагов разбиения"""
     return (final_value - start_value) / step
 
 def getX(init_val: float, step: float, overall_steps: float) -> list[float]:
+    """Рассчитывает точки x по заданному разбиению"""
     value = init_val
     result = list()
     for _  in range(int(init_val), int(overall_steps + 1)):
@@ -80,7 +82,7 @@ def CalculateError(values: tuple[list[float]], x: list[float], precision: int = 
         value.pop(0)
     x.pop(0)
     
-    header = "x\t\tТочное решение\tМетод Эйлера\tМетод Эйлера(М)\tМетод Рунге-Кутта"
+    header = "\nx\t\tТочное решение\tМетод Эйлера\tМетод Эйлера(М)\tМетод Рунге-Кутта"
     print(header)
     for i in range(len(x)):
         buf = f"{precision % x[i]}\t\t"
@@ -91,7 +93,6 @@ def CalculateError(values: tuple[list[float]], x: list[float], precision: int = 
     for i in range(len(values)):
         footer += f"{exponent_precision % abs(values[i][-1] - values[0][-1])}\t"
     print(footer)
-    pass
 
 def main():
     a = 0
@@ -108,10 +109,7 @@ def main():
     print("\nМетод Рунге-Кутта:\n")
     y_RK = Calculate(RungeKuttasMethod, x, y0, n, h, True)
     y_T = TrueValue(x,n)
-    print("\n")
     CalculateError((y_T, y_E, y_mE, y_RK), x)
-
-    
 
 if __name__ == '__main__':
     main()
