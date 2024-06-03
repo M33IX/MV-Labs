@@ -83,14 +83,14 @@ def CalculateError(values: tuple[list[float]], x: list[float], precision: int = 
         value.pop(0)
     x.pop(0)
     
-    header = "\nx\t\tТочное решение\tМетод Эйлера\tМетод Эйлера(М)\tМетод Рунге-Кутта"
+    header = "\nx\t\t\tТочное решение\tМетод Эйлера\tМетод Эйлера(М)\tМетод Рунге-Кутта"
     print(header)
     for i in range(len(x)):
-        buf = f"{precision % x[i]}\t\t"
+        buf = f"{precision % x[i]}\t\t\t"
         for j in range(len(values)):
             buf += f"{precision % values[j][i]}\t\t"
         print(buf)
-    footer = f"Погрешность x={x[-1]}: "
+    footer = f"Погрешность x={x[-1]}:\t"
     for i in range(len(values)):
         footer += f"{exponent_precision % abs(values[i][-1] - values[0][-1])}\t"
     print(footer)
