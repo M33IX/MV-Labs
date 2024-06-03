@@ -11,12 +11,12 @@ def AnalyticSolution(x: float) -> float:
 
 def TrueValue(x: list[float], n: float)-> list[float]:
     """Возвращает точное значение в заданых точках x"""
-    return [AnalyticSolution(x[i]) for i in range(1, int(n+1))]
+    return [AnalyticSolution(x[i]) for i in range(0, int(n+1))]
 
 def getStep(start_value: float, final_value: float, step: float) ->  float:
     return (final_value - start_value) / step
 
-def getXi(init_val: float, step: float, overall_steps: float) -> list[float]:
+def getX(init_val: float, step: float, overall_steps: float) -> list[float]:
     value = init_val
     result = list()
     for _  in range(int(init_val), int(overall_steps + 1)):
@@ -24,7 +24,7 @@ def getXi(init_val: float, step: float, overall_steps: float) -> list[float]:
         value += step
     return result
 
-def CalculateIterations(method:function, x: list[float], y0: float, n: float, h: float) -> list[float]:
+def Calculate(method, x: list[float], y0: float, n: float, h: float, makeTable: bool = False) -> list[float]:
     """Считает значение дифференциального уравнения по заданному методу"""
     y = [y0]
     deltayi = list()
@@ -35,7 +35,8 @@ def CalculateIterations(method:function, x: list[float], y0: float, n: float, h:
         y.append(result[1])
 
     deltayi.append(0)
-    MakeTable()
+    if makeTable:
+        MakeTable((x, y, deltayi))
     return y
 
 def EulersMethod(x: float, y: float, h: float) -> tuple[float, float]:
@@ -60,22 +61,57 @@ def RungeKuttasMethod(x: float, y: float, h: float) -> tuple[float, float]:
     y += deltayi
     return (deltayi, y)
 
-def MakeTable(columns: tuple[list[float]]) -> None:
-    """Мне уже"""
-    pass
+def MakeTable(columns: tuple[list[float]], precision: int = 4) -> None:
+    """Печатает таблицу в формате (iteration, x, y, deltay)"""
+    precision = f"%.{int(precision)}f"
+    header = "i\tx\ty\tdelta y"
+    print(header)
+    for i in range(0, len(columns[0])):
+        buf = f"{i}\t"
+        for j in range(0, len(columns)):
+            buf += f"{precision % columns[j][i]}\t"
+        print(buf)
 
-def CalculateError(MethodsResults: tuple[list[float]]) -> None:
-    """Просто похуй"""
+def CalculateError(values: tuple[list[float]], x: list[float], precision: int = 4) -> None:
+    """Создает и печатает таблицу погрешностей"""
+    exponent_precision = "%.2e"
+    precision = f"%.{int(precision)}f"
+    for value in values:
+        value.pop(0)
+    x.pop(0)
+    
+    header = "x\t\tТочное решение\tМетод Эйлера\tМетод Эйлера(М)\tМетод Рунге-Кутта"
+    print(header)
+    for i in range(len(x)):
+        buf = f"{precision % x[i]}\t\t"
+        for j in range(len(values)):
+            buf += f"{precision % values[j][i]}\t\t"
+        print(buf)
+    footer = f"Погрешность x={x[-1]}: "
+    for i in range(len(values)):
+        footer += f"{exponent_precision % abs(values[i][-1] - values[0][-1])}\t"
+    print(footer)
     pass
 
 def main():
     a = 0
     b = 0.5
-    y0 = 0
+    y0 = 3
     h = 0.1
     n = getStep(a, b, h)
-    x = getXi(a, h, n)
-    pass
+    x = getX(a, h, n)
+
+    print("\nМетод Эйлера:\n")
+    y_E = Calculate(EulersMethod, x, y0, n, h, True)
+    print("\nМодифицированный метод Эйлера:\n")
+    y_mE = Calculate(ModifiedEulersMethod, x, y0, n, h, True)
+    print("\nМетод Рунге-Кутта:\n")
+    y_RK = Calculate(RungeKuttasMethod, x, y0, n, h, True)
+    y_T = TrueValue(x,n)
+    print("\n")
+    CalculateError((y_T, y_E, y_mE, y_RK), x)
+
+    
 
 if __name__ == '__main__':
     main()
