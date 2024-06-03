@@ -2,12 +2,12 @@ import math
 
 def f(x: float, y: float) -> float:
     """Возвращает правую часть дифференциального уравнения"""
-    return y + math.pow(x,2)
+    return (1/2) * math.sin(2 * x) - (y * math.cos(x))
 
 def AnalyticSolution(x: float) -> float:
     """Возращает точное аналитическое решение дифференциального 
     уравнения"""
-    return -(math.pow(x, 2)) - 2*x + 5*math.exp(x) - 2
+    return math.sin(x) + (1 / math.pow(math.e, math.sin(x))) - 1
 
 def TrueValue(x: list[float], n: float)-> list[float]:
     """Возвращает точное значение в заданых точках x"""
@@ -97,9 +97,9 @@ def CalculateError(values: tuple[list[float]], x: list[float], precision: int = 
 
 def main():
     a = 0
-    b = 0.5
-    y0 = 3
-    h = 0.1
+    b = 1
+    y0 = 0
+    h = 0.2
     n = getStep(a, b, h)
     x = getX(a, h, n)
 
