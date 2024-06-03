@@ -16,7 +16,7 @@ def TrueValue(x: list[float], n: float)-> list[float]:
 def getStep(start_value: float, final_value: float, step: float) ->  float:
     return (final_value - start_value) / step
 
-def xStep(init_val: float, step: float, overall_steps: float) -> list[float]:
+def getXi(init_val: float, step: float, overall_steps: float) -> list[float]:
     value = init_val
     result = list()
     for _  in range(int(init_val), int(overall_steps + 1)):
@@ -25,6 +25,7 @@ def xStep(init_val: float, step: float, overall_steps: float) -> list[float]:
     return result
 
 def CalculateIterations(method:function, x: list[float], y0: float, n: float, h: float) -> list[float]:
+    """Считает значение дифференциального уравнения по заданному методу"""
     y = [y0]
     deltayi = list()
 
@@ -38,20 +39,20 @@ def CalculateIterations(method:function, x: list[float], y0: float, n: float, h:
     return y
 
 def EulersMethod(x: float, y: float, h: float) -> tuple[float, float]:
-    """Считает значение прироста и значение y на одной итерации"""
+    """Считает значение прироста и значение y на одной итерации по методу Эйлера"""
     deltayi = h * f(x,y)
     y += deltayi
     return (deltayi, y)
 
 def ModifiedEulersMethod(x: float, y: float, h: float) -> tuple[float, float]:
-    """Считает значение прироста и значение y на одной итерации"""
+    """Считает значение прироста и значение y на одной итерации по модифицированному методу Эйлера"""
     y2 = (h / 2) * f(x,y)
     deltayi = h * f(x + (h / 2), y + y2)
     y += deltayi
     return (deltayi, y)
 
 def RungeKuttasMethod(x: float, y: float, h: float) -> tuple[float, float]:
-    """Считает значение прироста и значение y на одной итерации"""
+    """Считает значение прироста и значение y на одной итерации по методу Рунге-Кутта"""
     k1 = h * f(x, y)
     k2 = h * f(x + ( h / 2 ), y + (k1 / 2))
     k3 = h * f(x + h, y + 2 * k2 - k1)
@@ -70,10 +71,10 @@ def CalculateError(MethodsResults: tuple[list[float]]) -> None:
 def main():
     a = 0
     b = 0.5
+    y0 = 0
     h = 0.1
     n = getStep(a, b, h)
-    y0 = 0
-    x = xStep(a, h, n)
+    x = getXi(a, h, n)
     pass
 
 if __name__ == '__main__':
